@@ -1,7 +1,7 @@
 """Default query for SQLStructStoreIndex."""
 import logging
 from abc import abstractmethod
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union, Dict
 
 from sqlalchemy import Table
 
