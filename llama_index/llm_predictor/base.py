@@ -108,7 +108,7 @@ class LLMPredictor(BaseLLMPredictor):
             event_id=event_id,
         )
 
-    def predict(self, prompt: Prompt, **prompt_args: Any) -> Union[str, Dict[str, str]]:
+    def predict(self, prompt: Prompt, **prompt_args: Any) -> Union[str, dict]]:
         """Predict."""
         event_id = self._log_start(prompt, prompt_args)
 
@@ -126,7 +126,7 @@ class LLMPredictor(BaseLLMPredictor):
         logger.debug(output)
         self._log_end(event_id, output, formatted_prompt)
 
-        return output
+        return response 
 
     def stream(self, prompt: Prompt, **prompt_args: Any) -> TokenGen:
         """Stream."""

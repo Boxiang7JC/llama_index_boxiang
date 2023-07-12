@@ -256,7 +256,7 @@ class BaseSQLTableQueryEngine(BaseQueryEngine):
 
         """
 
-    def _query(self, query_bundle: QueryBundle) -> Dict[str, str]:
+    def _query(self, query_bundle: QueryBundle) -> dict:
         """Answer a query."""
         table_desc_str = self._get_table_context(query_bundle)
         logger.info(f"> Table desc str: {table_desc_str}")
@@ -282,7 +282,7 @@ class BaseSQLTableQueryEngine(BaseQueryEngine):
         response = {
             "sql_query": sql_query,
             "model": model,
-            "cost": f"$\{cost}"
+            "cost": f"${cost}"
         }
         return response 
 
