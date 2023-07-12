@@ -2,7 +2,7 @@
 
 import logging
 from abc import ABC, abstractmethod
-from typing import List, Optional, Sequence
+from typing import List, Optional, Sequence, Union, Dict
 
 from llama_index.callbacks.base import CallbackManager
 from llama_index.indices.query.schema import QueryBundle, QueryType
@@ -16,7 +16,7 @@ class BaseQueryEngine(ABC):
     def __init__(self, callback_manager: Optional[CallbackManager]) -> None:
         self.callback_manager = callback_manager or CallbackManager([])
 
-    def query(self, str_or_query_bundle: QueryType) -> RESPONSE_TYPE:
+    def query(self, str_or_query_bundle: QueryType) -> Union[RESPONSE_TYPE, Dict[str, str]]:
         with self.callback_manager.as_trace("query"):
             if isinstance(str_or_query_bundle, str):
                 str_or_query_bundle = QueryBundle(str_or_query_bundle)
