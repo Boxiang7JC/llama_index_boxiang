@@ -269,6 +269,7 @@ class BaseSQLTableQueryEngine(BaseQueryEngine):
         )
 
         # construct return dict, which includes sql_query, model and cost 
+        print(response_dict)
         sql_query = response_dict["choices"][0]["text"] 
         sql_query = sql_query.split("\nSQLResult:")[0]
 
