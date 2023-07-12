@@ -170,7 +170,7 @@ class OpenAI(LLM, BaseModel):
 
         return gen()
 
-    def _complete(self, prompt: str, **kwargs: Any) -> CompletionResponse:
+    def _complete(self, prompt: str, **kwargs: Any) -> Dict[str, str]:
         if self._is_chat_model:
             raise ValueError("This model is a chat model.")
 
@@ -187,11 +187,7 @@ class OpenAI(LLM, BaseModel):
             stream=False,
             **all_kwargs,
         )
-        text = response["choices"][0]["text"]
-        return CompletionResponse(
-            text=text,
-            raw=response,
-        )
+        return response 
 
     def _stream_complete(self, prompt: str, **kwargs: Any) -> CompletionResponseGen:
         if self._is_chat_model:

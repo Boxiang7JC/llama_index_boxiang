@@ -256,37 +256,31 @@ class BaseSQLTableQueryEngine(BaseQueryEngine):
 
         """
 
-    def _query(self, query_bundle: QueryBundle) -> Response:
+    def _query(self, query_bundle: QueryBundle) -> Dict[str, str]:
         """Answer a query."""
         table_desc_str = self._get_table_context(query_bundle)
         logger.info(f"> Table desc str: {table_desc_str}")
 
-        response_str = self._service_context.llm_predictor.predict(
+        response_dict = self._service_context.llm_predictor.predict(
             self._text_to_sql_prompt,
             query_str=query_bundle.query_str,
             schema=table_desc_str,
             dialect=self._sql_database.dialect,
         )
 
-        sql_query_str = self._parse_response_to_sql(response_str)
-        # assume that it's a valid SQL query
-        logger.debug(f"> Predicted SQL query: {sql_query_str}")
+        # construct return dict, which includes sql_query, model and cost 
+        sql_query = response_dict["choices"][0]["text"] 
+        sql_query = sql_query.split("\nSQLResult:")[0]
 
-        raw_response_str, metadata = self._sql_database.run_sql(sql_query_str)
-        metadata["sql_query"] = sql_query_str
+        model = response_dict['model']
+        cost = response_dict['usage']['prompt_tokens'] / 1000 * 0.0015 + response_dict['usage']['completion_tokens'] / 1000 * 0.002
 
-        if self._synthesize_response:
-            response_str = self._service_context.llm_predictor.predict(
-                self._response_synthesis_prompt,
-                query_str=query_bundle.query_str,
-                sql_query=sql_query_str,
-                sql_response_str=raw_response_str,
-            )
-        else:
-            response_str = raw_response_str
-
-        response = Response(response=response_str, metadata=metadata)
-        return response
+        response = {
+            "sql_query": sql_query,
+            "model": model,
+            "cost": f"$\{cost}"
+        }
+        return response 
 
     async def _aquery(self, query_bundle: QueryBundle) -> Response:
         """Answer a query."""
