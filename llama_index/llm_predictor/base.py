@@ -2,7 +2,7 @@
 
 import logging
 from abc import abstractmethod
-from typing import Any, Optional, Protocol, runtime_checkable
+from typing import Any, Union, Dict, Optional, Protocol, runtime_checkable
 
 from llama_index.callbacks.base import CallbackManager
 from llama_index.callbacks.schema import CBEventType, EventPayload
@@ -108,7 +108,7 @@ class LLMPredictor(BaseLLMPredictor):
             event_id=event_id,
         )
 
-    def predict(self, prompt: Prompt, **prompt_args: Any) -> str:
+    def predict(self, prompt: Prompt, **prompt_args: Any) -> Union[str, Dict[str, str]]:
         """Predict."""
         event_id = self._log_start(prompt, prompt_args)
 
@@ -121,7 +121,7 @@ class LLMPredictor(BaseLLMPredictor):
         else:
             formatted_prompt = prompt.format(llm=self._llm, **prompt_args)
             response = self._llm.complete(formatted_prompt)
-            output = response.text
+            output = response
 
         logger.debug(output)
         self._log_end(event_id, output, formatted_prompt)
