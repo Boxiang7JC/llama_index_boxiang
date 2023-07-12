@@ -108,7 +108,7 @@ class LLMPredictor(BaseLLMPredictor):
             event_id=event_id,
         )
 
-    def predict(self, prompt: Prompt, **prompt_args: Any) -> Union[str, dict]]:
+    def predict(self, prompt: Prompt, **prompt_args: Any) -> Union[str, dict]:
         """Predict."""
         event_id = self._log_start(prompt, prompt_args)
 
