@@ -120,6 +120,7 @@ class LLMPredictor(BaseLLMPredictor):
             formatted_prompt = messages_to_prompt(messages)
         else:
             formatted_prompt = prompt.format(llm=self._llm, **prompt_args)
+            print(formatted_prompt)
             response = self._llm.complete(formatted_prompt)
             output = str(response)
 
