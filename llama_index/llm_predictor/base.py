@@ -125,10 +125,10 @@ class LLMPredictor(BaseLLMPredictor):
         else:
             formatted_prompt = prompt.format(llm=self._llm, **prompt_args)
             response = self._llm.complete(formatted_prompt)
-            print("-> response: ", type(response), response)
+			print("-> response: ", type(response), response)
             output = str(response)
             response = response["choices"][0]["text"].split("\nSQLResult:")[0]
-            print("-> response: ", type(response), response)
+			print("-> response: ", type(response), response)
 
         logger.debug(output)
         self._log_end(event_id, output, formatted_prompt)
