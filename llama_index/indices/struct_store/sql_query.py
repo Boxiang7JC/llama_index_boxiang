@@ -261,26 +261,14 @@ class BaseSQLTableQueryEngine(BaseQueryEngine):
         table_desc_str = self._get_table_context(query_bundle)
         logger.info(f"> Table desc str: {table_desc_str}")
 
-        response_dict = self._service_context.llm_predictor.predict(
+        prompt, response = self._service_context.llm_predictor.predict(
             self._text_to_sql_prompt,
             query_str=query_bundle.query_str,
             schema=table_desc_str,
             dialect=self._sql_database.dialect,
         )
 
-        # construct return dict, which includes sql_query, model and cost 
-        sql_query = response_dict["choices"][0]["text"] 
-        sql_query = sql_query.split("\nSQLResult:")[0]
-
-        model = response_dict['model']
-        cost = response_dict['usage']['prompt_tokens'] / 1000 * 0.0015 + response_dict['usage']['completion_tokens'] / 1000 * 0.002
-
-        response = {
-            "sql_query": sql_query,
-            "model": model,
-            "cost": f"${cost}"
-        }
-        return response 
+        return prompt, response 
 
     async def _aquery(self, query_bundle: QueryBundle) -> Response:
         """Answer a query."""

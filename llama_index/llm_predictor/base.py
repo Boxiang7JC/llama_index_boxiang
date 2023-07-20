@@ -109,27 +109,29 @@ class LLMPredictor(BaseLLMPredictor):
         )
 
     def predict(self, prompt: Prompt, **prompt_args: Any) -> Union[str, dict]:
-        """Predict."""
+        """
+		Predict.
+		Return prompt and response
+		"""
         event_id = self._log_start(prompt, prompt_args)
 
         if self._llm.metadata.is_chat_model:
             messages = prompt.format_messages(llm=self._llm, **prompt_args)
             chat_response = self._llm.chat(messages=messages)
             output = chat_response.message.content or ""
-            print("-> output: ", output)
-            response = output
+            response = output.split("\nSQLResult:")[0]
             # NOTE: this is an approximation, only for token counting
             formatted_prompt = messages_to_prompt(messages)
-            print("-> formatted_prompt: ", formatted_prompt)
         else:
             formatted_prompt = prompt.format(llm=self._llm, **prompt_args)
             response = self._llm.complete(formatted_prompt)
             output = str(response)
+			response = response["choices"][0]["text"].split("\nSQLResult:")[0]
 
         logger.debug(output)
         self._log_end(event_id, output, formatted_prompt)
 
-        return response 
+        return formatted_promp, response
 
     def stream(self, prompt: Prompt, **prompt_args: Any) -> TokenGen:
         """Stream."""
