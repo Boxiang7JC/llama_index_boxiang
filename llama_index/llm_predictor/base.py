@@ -117,6 +117,7 @@ class LLMPredictor(BaseLLMPredictor):
             chat_response = self._llm.chat(messages=messages)
             output = chat_response.message.content or ""
             print("-> output: ", output)
+            response = output
             # NOTE: this is an approximation, only for token counting
             formatted_prompt = messages_to_prompt(messages)
             print("-> formatted_prompt: ", formatted_prompt)
