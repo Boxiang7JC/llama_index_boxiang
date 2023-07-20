@@ -131,7 +131,7 @@ class LLMPredictor(BaseLLMPredictor):
         logger.debug(output)
         self._log_end(event_id, output, formatted_prompt)
 
-        return formatted_promp, response
+        return formatted_prompt, response
 
     def stream(self, prompt: Prompt, **prompt_args: Any) -> TokenGen:
         """Stream."""
