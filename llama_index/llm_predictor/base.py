@@ -126,6 +126,7 @@ class LLMPredictor(BaseLLMPredictor):
             formatted_prompt = prompt.format(llm=self._llm, **prompt_args)
             response = self._llm.complete(formatted_prompt)
             output = str(response)
+            print(output)
             response = response["choices"][0]["text"].split("\nSQLResult:")[0]
 
         logger.debug(output)
